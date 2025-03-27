@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { BrowserRouter, Route, Routes,Navigate} from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
@@ -7,10 +7,24 @@ import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
+import { Context } from "./store/appContext";
+
+import Login from "./pages/Login.jsx";
+import  Signup  from "./pages/Signup.jsx";
+import PrivatePage  from "./pages/Privatepage.jsx";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 
+const PrivateRoute = ({ children }) => {
+    const { store, actions } = useContext(Context);
+
+    useEffect(() => {
+        actions.validateToken();
+    }, []);
+
+    return store.token ? children : <Navigate to="/login" />;
+};
 //create your first component
 const Layout = () => {
     //the basename is used when your project is published in a subdirectory and not in the root of the domain
@@ -28,6 +42,9 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
+                        <Route element={<Login />} path="/login" />
+                        <Route element={<Signup />} path="/signup" />
+                        <Route path="/private" element={<PrivateRoute><PrivatePage/></PrivateRoute>} />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />

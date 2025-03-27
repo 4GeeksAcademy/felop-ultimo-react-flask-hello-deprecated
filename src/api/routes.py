@@ -8,6 +8,7 @@ from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_bcrypt import Bcrypt
 
+
 bcrypt = Bcrypt()
 api = Blueprint('api', __name__)
 
@@ -29,7 +30,7 @@ def signup():
         return jsonify({"error": "the user already exist"}), 409
 
     # Crear usuario y guardar en la DB
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    
     new_user = User(email=email, password=password, is_active=True)
     db.session.add(new_user)
     db.session.commit()
